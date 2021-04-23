@@ -1,0 +1,14 @@
+/* .title {
+  display: flex;
+  justify-content: center;
+}
+*/
+.inpt {
+  height: 30px;
+  width: 150px;
+}
+
+.filter {
+  display: flex;
+  justify-content: center;
+}
