@@ -1,24 +1,44 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./Contacts.module.css";
+import ContactsItem from "./ContactsItem/ContactsItem";
+import { connect } from "react-redux";
+import { deleteContact } from "../../redux/contacts/contactsActions";
 
-const Contacts = ({ contacts, deleteContact }) => {
-  const { name, number } = contacts;
+const Contacts = ({ filter, deleteContact, items }) => {
+  const filterItems = () => {
+    return items.filter((item) =>
+      item.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
   return (
     <>
-      <li className={styles.name}>
-        {name}: {number}
-        <button className={styles.btn} onClick={() => deleteContact(contacts)}>
-          delete
-        </button>
-      </li>
+      <ul className="contacts__name">
+        {filterItems().map((el) => (
+          <ContactsItem
+            contact={el}
+            key={el.id}
+            deleteContact={deleteContact}
+          />
+        ))}
+      </ul>
     </>
   );
 };
 
-Contacts.propTypes = {
-  contacts: PropTypes.object,
-  deleteContact: PropTypes.func.isRequired,
+const mapStateToProps = ({ contacts }) => ({
+  filter: contacts.filter,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteContact: (id) => dispatch(deleteContact(id)),
+  };
 };
 
-export default Contacts;
+Contacts.propTypes = {
+  items: PropTypes.array,
+  deleteContact: PropTypes.func.isRequired,
+  filter: PropTypes.string,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
