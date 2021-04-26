@@ -2,18 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import ContactsItem from "./ContactsItem/ContactsItem";
 import { connect } from "react-redux";
-import { deleteContact } from "../../redux/contacts/contactsActions";
+import { deleteContact } from "../../redux/contacts/contactsOperation";
+import { getFilterContacts } from "../../redux/contacts/contactsSelector";
 
-const Contacts = ({ filter, deleteContact, items }) => {
-  const filterItems = () => {
-    return items.filter((item) =>
-      item.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  };
+const Contacts = ({ deleteContact, filterContacts }) => {
   return (
     <>
       <ul className="contacts__name">
-        {filterItems().map((el) => (
+        {filterContacts.map((el) => (
           <ContactsItem
             contact={el}
             key={el.id}
@@ -26,7 +22,7 @@ const Contacts = ({ filter, deleteContact, items }) => {
 };
 
 const mapStateToProps = ({ contacts }) => ({
-  filter: contacts.filter,
+  filterContacts: getFilterContacts(contacts),
 });
 
 const mapDispatchToProps = (dispatch) => {
